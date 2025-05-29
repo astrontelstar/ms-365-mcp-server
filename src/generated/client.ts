@@ -23729,7 +23729,7 @@ get the instances of an event. Currently, this operation returns event bodies in
     method: 'post',
     path: '/me/events',
     alias: 'create-calendar-event',
-    description: `Create one or more single-value extended properties in a new or existing instance of a resource. The following user resources are supported: The following group resources: See Extended properties overview for more information about when to use
+    description: `Create one or more multi-value extended properties in a new or existing instance of a resource. The following user resources are supported: The following group resources are supported: See Extended properties overview for more information about when to use
 open extensions or extended properties, and how to specify extended properties.`,
     requestFormat: 'json',
     parameters: [
@@ -23861,6 +23861,79 @@ open extensions or extended properties, and how to specify extended properties.`
     path: '/me/mailFolders',
     alias: 'list-mail-folders',
     description: `Get the mail folder collection directly under the root folder of the signed-in user. The returned collection includes any mail search folders directly under the root. By default, this operation does not return hidden folders. Use a query parameter includeHiddenFolders to include them in the response. This operation does not return all mail folders in a mailbox, only the child folders of the root folder. To return all mail folders in a mailbox, each child folder must be traversed separately.`,
+    requestFormat: 'json',
+    parameters: [
+      {
+        name: 'includeHiddenFolders',
+        type: 'Query',
+        schema: z.string().describe('Include Hidden Folders').optional(),
+      },
+      {
+        name: '$top',
+        type: 'Query',
+        schema: z.number().int().gte(0).describe('Show only the first n items').optional(),
+      },
+      {
+        name: '$skip',
+        type: 'Query',
+        schema: z.number().int().gte(0).describe('Skip the first n items').optional(),
+      },
+      {
+        name: '$search',
+        type: 'Query',
+        schema: z.string().describe('Search items by search phrases').optional(),
+      },
+      {
+        name: '$filter',
+        type: 'Query',
+        schema: z.string().describe('Filter items by property values').optional(),
+      },
+      {
+        name: '$count',
+        type: 'Query',
+        schema: z.boolean().describe('Include count of items').optional(),
+      },
+      {
+        name: '$orderby',
+        type: 'Query',
+        schema: z.array(z.string()).describe('Order items by property values').optional(),
+      },
+      {
+        name: '$select',
+        type: 'Query',
+        schema: z.array(z.string()).describe('Select properties to be returned').optional(),
+      },
+      {
+        name: '$expand',
+        type: 'Query',
+        schema: z.array(z.string()).describe('Expand related entities').optional(),
+      },
+    ],
+    response: z.void(),
+    errors: [
+      {
+        status: NaN,
+        description: `Retrieved collection`,
+        schema: microsoft_graph_mailFolderCollectionResponse,
+      },
+      {
+        status: NaN,
+        description: `error`,
+        schema: microsoft_graph_ODataErrors_ODataError,
+      },
+      {
+        status: NaN,
+        description: `error`,
+        schema: microsoft_graph_ODataErrors_ODataError,
+      },
+    ],
+  },
+  {
+    method: 'get',
+    path: '/me/mailFolders/:mailFolderId/childFolders',
+    alias: 'list-mail-folder-child-folders',
+    description: `Get the folder collection under the specified folder. You can use the .../me/mailFolders shortcut to get the top-level
+folder collection and navigate to another folder. By default, this operation does not return hidden folders. Use a query parameter includeHiddenFolders to include them in the response.`,
     requestFormat: 'json',
     parameters: [
       {
@@ -24071,13 +24144,7 @@ open extensions or extended properties, and how to specify extended properties.`
     method: 'get',
     path: '/me/messages/:messageId',
     alias: 'get-mail-message',
-    description: `You can get a single resource instance expanded with a specific extended property, or a collection of resource instances
-that include extended properties matching a filter. Using the query parameter $expand allows you to get the specified resource instance expanded with a specific extended
-property. Use a $filter and eq operator on the id property to specify the extended property. This is currently the only way to get the singleValueLegacyExtendedProperty object that represents an extended property. To get resource instances that have certain extended properties, use the $filter query parameter and apply an eq operator
-on the id property. In addition, for numeric extended properties, apply one of the following operators on the value property:
-eq, ne,ge, gt, le, or lt. For string-typed extended properties, apply a contains, startswith, eq, or ne operator on value. The filter is applied to all instances of the resource in the signed-in user&#x27;s mailbox. Filtering the string name (Name) in the id of an extended property is case-sensitive. Filtering the value property of an extended
-property is case-insensitive. The following user resources are supported: As well as the following group resources: See Extended properties overview for more information about when to use
-open extensions or extended properties, and how to specify extended properties.`,
+    description: `Get the properties and relationships of the eventMessage object. Apply the $expand parameter on the event navigation property to get the associated event in an attendee&#x27;s calendar. Currently, this operation returns event message bodies in only HTML format.`,
     requestFormat: 'json',
     parameters: [
       {

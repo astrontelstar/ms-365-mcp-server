@@ -24,6 +24,14 @@
     ]
   },
   {
+    "pathPattern": "/me/mailFolders/{mailFolder-id}/childFolders",
+    "method": "get",
+    "toolName": "list-mail-folder-child-folders",
+    "scopes": [
+      "Mail.Read"
+    ]
+  },
+  {
     "pathPattern": "/me/messages/{message-id}",
     "method": "get",
     "toolName": "get-mail-message",
